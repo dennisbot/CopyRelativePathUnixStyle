@@ -31,7 +31,7 @@ namespace CopyRelativePathUnixStyle
         /// <summary>
         /// CopyRelativePathUnixStylePackage GUID string.
         /// </summary>
-        public const string PackageGuidString = "b298f0ef-b3b4-4459-8f0d-e8573be4cf43";
+        public const string PackageGuidString = "F191903B-3392-4216-9202-89315D11B835";
 
         #region Package Members
 

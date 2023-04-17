@@ -6,13 +6,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using EnvDTE;
-using Microsoft.VisualStudio;
 using Task = System.Threading.Tasks.Task;
-using Microsoft.VisualStudio.OLE.Interop;
-using static System.Net.Mime.MediaTypeNames;
-using EnvDTE80;
-using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
 
 namespace CopyRelativePathUnixStyle
 {
@@ -29,8 +23,8 @@ namespace CopyRelativePathUnixStyle
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
-        public static readonly Guid CommandSet = new Guid("C537077D-EF41-4871-815B-72075A045BF6");
-        /// <summary>
+        public static readonly Guid CommandSet = new Guid("5A78A6F1-6134-44A8-BCCC-0E02F4CADA33");
+        /// <summary>?
         /// VS Package that provides this command, not null.
         /// </summary>
         private readonly AsyncPackage package;
@@ -43,9 +37,6 @@ namespace CopyRelativePathUnixStyle
         /// <param name="commandService">Command service to add command to, not null.</param>
         private CopyRelativePathUnixStyleCommand(AsyncPackage package, OleMenuCommandService commandService)
         {
-            this.Logger = new FileLogger("C:\\Users\\dennisbot\\temp\\logs\\CopyRelativeFilePathCommand.log");
-            Logger.Log("Starting extension...");
-
             this.package = package ?? throw new ArgumentNullException(nameof(package));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
@@ -74,8 +65,6 @@ namespace CopyRelativePathUnixStyle
             }
         }
 
-        public FileLogger Logger { get; }
-
         public static async Task InitializeAsync(AsyncPackage package)
         {
             // Switch to the main thread - the call to AddCommand in Command1's constructor requires
@@ -89,61 +78,58 @@ namespace CopyRelativePathUnixStyle
         private void Execute(object sender, EventArgs e)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
-            this.Logger.Log("executing Execute ...");
-            var selectedItems = (Array)DTEHelper.GetSelectedItems(DTEHelper.GetDTE());
-            this.Logger.Log("selectedItems array cast worked!!!");
-            if (selectedItems != null && selectedItems.Length == 1)
-            {
-                var selectedItem = selectedItems.GetValue(0) as ProjectItem;
-                if (selectedItem != null)
-                {
-                    var path = selectedItem.Properties.Item("FullPath").Value.ToString();
-                    this.Logger.Log($"selectedItem path value: {path}");
-                    var projectPath = Path.GetDirectoryName(DTEHelper.GetProjectFilePath(selectedItem.ContainingProject));
-                    this.Logger.Log($"projectPath = {projectPath}");
-                    var relativePath = GetRelativePath(projectPath, path);
-                    this.Logger.Log($"relativePath = {relativePath}");
-                    if (relativePath != null)
-                    {
-                        Clipboard.SetText(relativePath.Replace('\\', '/'));
-                    }
-                    else
-                    {
-                        ShowMessage("Cannot determine relative path.");
-                    }
-                }
-                else
-                {
-                    Logger.Log("there is no selectedItem");
-                }
-            }
-        }
-        private static string GetRelativePath(string basePath, string fullPath)
-        {
-            var baseUri = new Uri(basePath);
-            var fullUri = new Uri(fullPath);
-            if (baseUri.Scheme == fullUri.Scheme && baseUri.Host == fullUri.Host)
-            {
-                var relativeUri = baseUri.MakeRelativeUri(fullUri);
-                return Uri.UnescapeDataString(relativeUri.ToString());
-            }
-            else
-            {
-                return null;
-            }
-        }
-        private static System.IServiceProvider GetServiceProvider(Microsoft.VisualStudio.Shell.IAsyncServiceProvider asyncServiceProvider)
-        {
-            // Get the service provider from the IAsyncServiceProvider.
-            var serviceProvider = asyncServiceProvider
-                .GetServiceAsync(typeof(System.IServiceProvider)) as System.IServiceProvider;
 
-            return serviceProvider;
+            IntPtr hierarchyPointer, selectionContainerPointer;
+            Object selectedObject = null;
+            IVsMultiItemSelect multiItemSelect;
+            uint projectItemId;
+
+            IVsMonitorSelection monitorSelection =
+                (IVsMonitorSelection)Package.GetGlobalService(
+                    typeof(SVsShellMonitorSelection));
+
+            monitorSelection.GetCurrentSelection(out hierarchyPointer,
+                out projectItemId,
+                out multiItemSelect,
+                out selectionContainerPointer);
+
+            IVsHierarchy selectedHierarchy = Marshal.GetTypedObjectForIUnknown(
+                hierarchyPointer,
+                typeof(IVsHierarchy)) as IVsHierarchy;
+
+            if (selectedHierarchy != null)
+            {
+                selectedHierarchy.GetProperty(projectItemId,
+                    (int)__VSHPROPID.VSHPROPID_ExtObject,
+                    out selectedObject);
+                ProjectItem selectedProjectItem = selectedObject as ProjectItem;
+                if (selectedProjectItem != null)
+                {
+                    Project selectedProject = selectedProjectItem.ContainingProject;
+                    Solution solution = selectedProject.DTE.Solution;
+                    string solutionFullName = solution.FullName;
+                    //string projectFullName = selectedProject.FullName;
+                    string filePath = selectedProjectItem.Properties.Item("FullPath").Value.ToString();
+                    // Get the folder path of the csproj file
+                    //string projectFolderPath = Path.GetDirectoryName(projectFullName);
+                    // Get the folder path of the sln file
+                    string solutionFolderPath = Path.GetDirectoryName(solutionFullName);
+                    filePath = filePath.Replace(solutionFolderPath, "");
+                    filePath = ReplaceBackslashesWithSlashes(filePath);
+                    Clipboard.SetText(filePath);
+                }
+            }
         }
-        private static void ShowMessage(string message)
+        private string ReplaceBackslashesWithSlashes(string text)
         {
+            return text.Replace("\\", "/").TrimStart('/');
+        }
+
+        private static void ShowMessage(string message, AsyncPackage package)
+        {
+            
             VsShellUtilities.ShowMessageBox(
-                GetServiceProvider(Instance.ServiceProvider),
+                package,
                 message,
                 null,
                 OLEMSGICON.OLEMSGICON_INFO,

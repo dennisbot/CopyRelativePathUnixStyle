@@ -36,11 +36,10 @@
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
     <Groups>
-      <Group guid="guidCopyProjectUnixPathPackageCmdSet" id="MyMenuGroup" priority="0x0600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
-      </Group>
+        <Group guid="guidCopyProjectUnixPathPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
+        </Group>
     </Groups>
-
     <!--Buttons section. -->
     <!--This section defines the elements the user can interact with, like a menu command or a button
         or combo box in a toolbar. -->
@@ -72,7 +71,6 @@
       <!--<Bitmap guid="guidImages" href="Resources\Command1.png"  />-->
     </Bitmaps>
   </Commands>
-
   <Symbols>
     <!-- This is the package guid. -->
     <GuidSymbol name="guidCopyProjectUnixPathPackage" value="{F191903B-3392-4216-9202-89315D11B835}" />
