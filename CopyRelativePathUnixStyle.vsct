@@ -22,7 +22,7 @@
 
   <!--The Commands section is where commands, menus, and menu groups are defined.
       This section uses a Guid to identify the package that provides the command defined inside it. -->
-  <Commands package="guidCopyProjectUnixPathPackage">
+  <Commands package="guidCopyRelativePathUnixStylePackage">
     <!-- Inside this section we have different sub-sections: one for the menus, another
     for the menu groups, one for the buttons (the actual commands), one for the combos
     and the last one for the bitmaps used. Each element is identified by a command id that
@@ -36,7 +36,7 @@
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
     <Groups>
-        <Group guid="guidCopyProjectUnixPathPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Group guid="guidCopyRelativePathUnixStylePackageCmdSet" id="MyMenuGroup" priority="0x0600">
             <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
         </Group>
     </Groups>
@@ -51,8 +51,8 @@
               <CommandFlag>DefaultInvisible</CommandFlag>
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
-      <Button guid="guidCopyProjectUnixPathPackageCmdSet" id="Command1Id" priority="0x0100" type="Button">
-        <Parent guid="guidCopyProjectUnixPathPackageCmdSet" id="MyMenuGroup" />
+      <Button guid="guidCopyRelativePathUnixStylePackageCmdSet" id="Command1Id" priority="0x0100" type="Button">
+        <Parent guid="guidCopyRelativePathUnixStylePackageCmdSet" id="MyMenuGroup" />
         <Icon guid="guidImages" id="bmpPicStrikethrough" />
         <Strings>
           <ButtonText>Copy File Relative Path (Unix style)</ButtonText>
@@ -73,10 +73,10 @@
   </Commands>
   <Symbols>
     <!-- This is the package guid. -->
-    <GuidSymbol name="guidCopyProjectUnixPathPackage" value="{F191903B-3392-4216-9202-89315D11B835}" />
+    <GuidSymbol name="guidCopyRelativePathUnixStylePackage" value="{F191903B-3392-4216-9202-89315D11B835}" />
 
     <!-- This is the guid used to group the menu commands together -->
-    <GuidSymbol name="guidCopyProjectUnixPathPackageCmdSet" value="{5A78A6F1-6134-44A8-BCCC-0E02F4CADA33}">
+    <GuidSymbol name="guidCopyRelativePathUnixStylePackageCmdSet" value="{5A78A6F1-6134-44A8-BCCC-0E02F4CADA33}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
       <IDSymbol name="Command1Id" value="0x0100" />
     </GuidSymbol>
