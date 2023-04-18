@@ -1,20 +1,23 @@
-# A Visual Studio extension to copy project directory path in Unix/Linux style in Visual Studio's solution explorer
+# A Visual Studio extension to copy a relative-to-solution unix-like file path in Visual Studio's solution explorer
 A very simple extension for Visual Studio made out of frustration over a narrow case:
 
-For simpler usage of .NET CLI in a Git Bash inside Windows Terminal on Windows, I need to `cd` to the project's directory to build, run, etc. The context menu in the Visual Studio's solution explorer gives me the full path to the project in DOS/Windows format i.e. with backslashes as the path delimiter, while Git Bash needs the Unix/Linux style i.e. with forward-slashes. To convert the backslashes to forward-slahses in the path you could use something like below (or an external tool):
+# Use Case
+My workflow involves jumping over text editors (from VS to VSCode or to ST3). I need to copy a relative-to-solution unix-like file path so that I can quickly look for the same file in VSCode or ST3 using their "go to all" quick access panel.
 
-```console
-$ p='\a\b\c'
-$ echo "${p//\\//}"
-```
+VS doesn't have that functionality by default (there is another one that gives you the absolute path in windows format), and although I looked for extensions in their gallery, I couldn't find any (or one that for some reason didn't get installed), so I decided to create my own extension based on another project which I give credits down below.
 
-But it's an extra step and why not using fewer clicks and keystrokes? By using this extension you can get the path to the project directory copied to your clipboard so that in Git Bash you can just `cd ctrl+v`. After installing this extension you will get a new option in the context menu when you right click on a project in the solution explorer as below:
+# Usage
+
+After installing this extension you will get a new option in the context menu when you right click on any file in the solution explorer as below:
 
 ![plot](./Resources/contextmenu.png)
 
+You can also bind a keyboard shorcut by updating the associated command as shown below:
+
+![plot](./Resources/keybinding_mapping_scheme.png)
+
+# Credits
+
 The core logic of this extension is a slight modification of the answer provided in [this Stackoverflow post](https://stackoverflow.com/a/45180002/2528681). Thanks and lots of credits to the writer of the aforementioned post.
 
-
-
-
-
+The primary logic for this extension is a modification of the solution provided by [Masoud Memariani](https://github.com/masoudmemariani) in their [CopyProjectUnixPath](https://github.com/masoudmemariani/CopyProjectUnixPath) repository. I would like to extend my sincere gratitude to Memariani for their contribution to the community.
