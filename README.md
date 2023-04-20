@@ -1,5 +1,11 @@
-# A Visual Studio extension to copy a relative-to-solution unix-like file path in Visual Studio's solution explorer
-A very simple extension for Visual Studio made out of frustration over a narrow case:
+# Visual Studio Extension: Copy Relative-to-Solution Unix-Like File Path
+
+This extension for Visual Studio provides a simple solution for copying a relative-to-solution unix-like file path directly from Visual Studio's solution explorer.
+
+## Download
+
+Download the extension from Visual Studio Marketplace [here](https://marketplace.visualstudio.com/items?itemName=DennisHuillca.CopyRelativePathUnixStyle). You can also look for this extension in the extension manager built-in functionality in VS.
+
 
 # Use Case
 My workflow involves jumping over text editors (from VS to VSCode or to ST3). I need to copy a relative-to-solution unix-like file path so that I can quickly look for the same file in VSCode or ST3 using their "go to all" quick access panel.
@@ -12,7 +18,7 @@ After installing this extension you will get a new option in the context menu wh
 
 ![plot](./Resources/contextmenu.png)
 
-You can also bind a keyboard shorcut by updating the associated command as shown below:
+You can also bind a keyboard shortcut by updating the associated command as shown below:
 
 ![plot](./Resources/keybinding_mapping_scheme.png)
 
